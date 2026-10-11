@@ -61,6 +61,8 @@ struct SettingsView: View {
 
         Section("Places") {
           NavigationLink("Geofencing (prototype)") { GeofenceView() }
+        Section("Movement") {
+          NavigationLink("Activity starts (prototype)") { ActivityStartView() }
         }
 
         Section("Help") {

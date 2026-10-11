@@ -22,7 +22,7 @@
 		<string>A0000006472F0001</string>
 	</array>
 	<key>NSMotionUsageDescription</key>
-	<string>Count new steps for the optional temporary app-access challenge.</string>
+	<string>Optionally detect walking, running or cycling to start a profile, or count new steps for temporary app access.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Save a place for optional profile geofencing.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
