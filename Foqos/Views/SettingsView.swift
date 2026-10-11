@@ -103,6 +103,10 @@ struct SettingsView: View {
           }
         }
 
+        Section("Accountability") {
+          NavigationLink("Partner controls (prototype)") { PartnerControlView() }
+        }
+
         Section("About") {
           HStack {
             Text("Version")

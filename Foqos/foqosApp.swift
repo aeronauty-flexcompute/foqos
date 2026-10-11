@@ -30,6 +30,9 @@ struct foqosApp: App {
   @StateObject private var requestAuthorizer = RequestAuthorizer()
   @StateObject private var activityStarts = ActivityStartManager(context: container.mainContext)
   @StateObject private var donationManager = TipManager()
+  @Environment(\.scenePhase) private var scenePhase
+  @StateObject private var partnerPhone = PartnerPhoneManager(context: container.mainContext)
+  @StateObject private var familyPartner = FamilyPartnerStore()
   @StateObject private var navigationManager = NavigationManager()
   @StateObject private var nfcWriter = NFCWriter()
   @StateObject private var ratingManager = RatingManager()
@@ -62,6 +65,7 @@ struct foqosApp: App {
           guard let context = notification.object as? ModelContext,
             context === container.mainContext
           else { return }
+          partnerPhone.observeSession()
           FoqosShortcutsProvider.updateAppShortcutParameters()
         }
         .onOpenURL { url in
@@ -81,6 +85,17 @@ struct foqosApp: App {
         .environmentObject(donationManager)
         .environmentObject(alertsManager)
         .environmentObject(startegyManager)
+        .environmentObject(partnerPhone)
+        .environmentObject(familyPartner)
+        // shortcut: foreground refresh only, add push reconciliation before relying on locked-phone control.
+        .task(id: scenePhase) {
+          guard scenePhase == .active else { return }
+          while !Task.isCancelled {
+            partnerPhone.observeSession()
+            await familyPartner.refresh(outing: partnerPhone)
+            do { try await Task.sleep(for: .seconds(20)) } catch { return }
+          }
+        }
         .environmentObject(navigationManager)
         .environmentObject(nfcWriter)
         .environmentObject(ratingManager)
