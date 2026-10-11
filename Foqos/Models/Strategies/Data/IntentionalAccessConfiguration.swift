@@ -18,7 +18,8 @@ struct IntentionalAccessConfiguration: Codable, Equatable {
     if kind == .questions {
       guard let questions, (1...10).contains(questions.count),
         Set(questions.map(\.id)).count == questions.count,
-        questions.allSatisfy(\.isValid) else { return false }
+        questions.allSatisfy(\.isValid)
+      else { return false }
     }
     return !prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && prompt.count <= 500
       && (5...60).contains(accessDurationInMinutes) && (1...10).contains(maximumUnblockCount)
