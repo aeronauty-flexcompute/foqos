@@ -23,5 +23,9 @@
 	</array>
 	<key>NSMotionUsageDescription</key>
 	<string>Count new steps for the optional temporary app-access challenge.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Save a place for optional profile geofencing.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Start or stop your selected profile when you cross its boundary.</string>
 </dict>
 </plist>
