@@ -1,10 +1,12 @@
 import XCTest
+
 @testable import foqos
 
 @MainActor
 final class ModularCompositionTests: ModelRegressionTestCase {
   func testOptionalControlsCanStartIntentionalProfileWithoutAdoptingEachOthersSession() throws {
-    let profile = BlockedProfiles(name: "Family challenges",
+    let profile = BlockedProfiles(
+      name: "Family challenges",
       blockingStrategyId: IntentionalAccessBlockingStrategy.id,
       strategyData: try JSONEncoder().encode(IntentionalAccessConfiguration()))
     context.insert(profile)
@@ -15,7 +17,8 @@ final class ModularCompositionTests: ModelRegressionTestCase {
     let strategy = StrategyManager()
     defer { strategy.stopTimer() }
     let controllers = ["geofence", "activity", "partner"].map {
-      ProfileSessionControl(context: context, key: $0, defaults: defaults,
+      ProfileSessionControl(
+        context: context, key: $0, defaults: defaults,
         manager: strategy, isAuthorized: { true })
     }
     for controller in controllers { controller.profileID = profile.id }
