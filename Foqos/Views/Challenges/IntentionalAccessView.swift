@@ -11,6 +11,7 @@ struct IntentionalAccessView: View {
   @State private var isConfirmed = false
   @State private var first = Int.random(in: 10...49)
   @State private var second = Int.random(in: 2...9)
+  @State private var responses: [UUID: String] = [:]
   @State private var answer = ""
   @State private var errorMessage: String?
 
@@ -25,6 +26,9 @@ struct IntentionalAccessView: View {
     case .steps:
       return StepChallengeManager.isComplete(
         steps: stepCounter.steps, goal: configuration.stepGoal ?? 0)
+    case .questions:
+      guard let questions = configuration.questions, !questions.isEmpty else { return false }
+      return questions.allSatisfy { $0.accepts(responses[$0.id] ?? "") }
     }
   }
 
@@ -39,6 +43,7 @@ struct IntentionalAccessView: View {
                 isConfirmed = false
                 answer = ""
                 stepCounter.stop()
+                responses = [:]
               } label: {
                 HStack {
                   Label(token)
@@ -69,6 +74,19 @@ struct IntentionalAccessView: View {
               }
             case .steps:
               StepChallengeView(counter: stepCounter, goal: configuration.stepGoal ?? 100)
+            case .questions:
+              Section("Your questions") {
+                ForEach(configuration.questions ?? []) { question in
+                  Text(question.question)
+                  TextField(
+                    "Your answer",
+                    text: Binding(
+                      get: { responses[question.id] ?? "" },
+                      set: { responses[question.id] = $0 }
+                    ))
+                }
+                Text("All answers must match the answers you set.").font(.caption)
+              }
             }
             Button("Open for \(configuration.accessDurationInMinutes) minutes") {
               do {
